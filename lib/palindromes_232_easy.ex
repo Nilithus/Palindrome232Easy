@@ -3,8 +3,8 @@ defmodule Palindromes_232Easy do
     IO.puts("Computer begin program...")
     case File.open(Path.expand("enable1.txt"), [:read, :utf8]) do
       {:ok, file} ->
-        # files are not zero indexed but enumerables are...
-        IO.stream(file, :line) |> process_file(1)
+        #this will read the entire file into memory (I think) which is not ideal
+        IO.stream(file, :line) |> Enum.to_list |> process_file
         File.close(file)
       {:error, reason} ->
         IO.puts("Huston we have a problem")
@@ -12,28 +12,24 @@ defmodule Palindromes_232Easy do
     end
   end
 
-  defp process_file(fileStream, fileLineNumber) do
+  defp process_file([]) do
+    IO.puts(" ")
+    IO.puts("Computer end program")
+  end
+
+  defp process_file([head | tail]) do
     IO.puts(" ")
     IO.puts("Processing Palindrome....")
 
-    index = fileLineNumber - 1
-
-    lines_in_palindrome = Enum.fetch!(fileStream, index)
+    lines_in_palindrome = head
     |> String.strip
     |> String.to_integer
 
-    Enum.slice(fileStream, index, lines_in_palindrome)
-    |> Enum.join
-    |> String.replace(~r{\W}, "")
-    |> String.downcase
-    |> process_palindrome
+    {palindrome, palindromeTail} = Enum.split(tail, lines_in_palindrome)
 
-    cond do
-      fileLineNumber + lines_in_palindrome < Enum.count(fileStream) ->
-                process_file(fileStream, fileLineNumber + lines_in_palindrome + 1)
-      true ->
-        IO.puts("Comupter end program...")
-    end
+    palindrome |> Enum.join |> String.replace(~r{\W}, "") |> String.downcase |> process_palindrome
+
+    process_file(palindromeTail)
   end
 
   defp process_palindrome(palindromeText) do
