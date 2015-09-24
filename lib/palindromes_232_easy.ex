@@ -1,7 +1,7 @@
 defmodule Palindromes_232Easy do
-  def readFile do
+  def readFile(challengeInputPath) do
     IO.puts("Computer begin program...")
-    case File.open(Path.expand("enable1.txt"), [:read, :utf8]) do
+    case File.open(Path.expand(challengeInputPath), [:read, :utf8]) do
       {:ok, file} ->
         #this will read the entire file into memory (I think) which is not ideal
         IO.stream(file, :line) |> Enum.to_list |> process_file
