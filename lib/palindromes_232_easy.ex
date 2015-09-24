@@ -27,7 +27,11 @@ defmodule Palindromes_232Easy do
 
     {palindrome, palindromeTail} = Enum.split(tail, lines_in_palindrome)
 
-    palindrome |> Enum.join |> String.replace(~r{\W}, "") |> String.downcase |> process_palindrome
+    palindrome
+    |> Enum.join
+    |> String.replace(~r{\W}, "")
+    |> String.downcase
+    |> process_palindrome
 
     process_file(palindromeTail)
   end
